@@ -3,8 +3,11 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const { createObjectCsvStringifier } = require("csv-writer");
-
+const cors = require("cors");
 const app = express();
+
+// Use CORS middleware
+app.use(cors());
 
 // Ensure the uploads directory exists
 const uploadDir = "uploads/";
