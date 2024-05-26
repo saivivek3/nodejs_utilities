@@ -1,0 +1,113 @@
+{
+  "company": {
+    "name": "Tech Innovators Inc.",
+    "location": {
+      "address": "1234 Silicon Valley",
+      "city": "San Francisco",
+      "state": "CA",
+      "zipCode": "94107"
+    },
+    "departments": [
+      {
+        "name": "Research and Development",
+        "employees": [
+          {
+            "id": 1,
+            "name": "Alice Johnson",
+            "position": "Lead Researcher",
+            "skills": ["Machine Learning", "Data Analysis", "Python"],
+            "contact": {
+              "email": "alice.johnson@techinnovators.com",
+              "phone": "555-1234"
+            },
+            "active": true
+          },
+          {
+            "id": 2,
+            "name": "Bob Smith",
+            "position": "Research Scientist",
+            "skills": ["Data Mining", "Statistics", "R"],
+            "contact": {
+              "email": "bob.smith@techinnovators.com",
+              "phone": "555-5678"
+            },
+            "active": true
+          }
+        ],
+        "budget": 5000000
+      },
+      {
+        "name": "Marketing",
+        "employees": [
+          {
+            "id": 3,
+            "name": "Carol White",
+            "position": "Marketing Manager",
+            "skills": ["SEO", "Content Strategy", "Social Media"],
+            "contact": {
+              "email": "carol.white@techinnovators.com",
+              "phone": "555-8765"
+            },
+            "active": false
+          }
+        ],
+        "budget": 2000000
+      }
+    ],
+    "founded": 2010,
+    "publiclyTraded": true,
+    "stockSymbol": "TII"
+  },
+  "products": [
+    {
+      "id": "P1001",
+      "name": "Innovative Widget",
+      "category": "Hardware",
+      "price": 99.99,
+      "inStock": true,
+      "features": {
+        "color": "black",
+        "dimensions": {
+          "width": "5cm",
+          "height": "10cm",
+          "depth": "2cm"
+        },
+        "warranty": "2 years"
+      }
+    },
+    {
+      "id": "P1002",
+      "name": "Advanced Gadget",
+      "category": "Software",
+      "price": 199.99,
+      "inStock": false,
+      "features": {
+        "version": "1.2.3",
+        "platforms": ["Windows", "Mac", "Linux"],
+        "license": "perpetual"
+      }
+    }
+  ],
+  "recentTransactions": [
+    {
+      "transactionId": "T5001",
+      "date": "2024-05-25",
+      "amount": 299.99,
+      "customer": {
+        "name": "David Brown",
+        "email": "david.brown@example.com"
+      },
+      "productsPurchased": ["P1001", "P1002"]
+    },
+    {
+      "transactionId": "T5002",
+      "date": "2024-05-26",
+      "amount": 99.99,
+      "customer": {
+        "name": "Eva Green",
+        "email": "eva.green@example.com"
+      },
+      "productsPurchased": ["P1001"]
+    }
+  ]
+}
