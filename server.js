@@ -639,6 +639,9 @@ const upload = multer({ dest: "uploads/" });
 // Route to handle file upload and conversion
 app.post("/upload", upload.single("file"), (req, res) => {
   // Ensure a file was uploaded
+
+  // Use CORS middleware
+  app.use(cors());
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
