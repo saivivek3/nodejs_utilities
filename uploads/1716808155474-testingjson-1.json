@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "age": 30,
+    "isStudent": false,
+    "contactInfo": {
+      "email": "john.doe@example.com",
+      "phone": "+1234567890"
+    },
+    "courses": [
+      {
+        "courseId": 101,
+        "courseName": "Mathematics",
+        "grade": "A"
+      },
+      {
+        "courseId": 102,
+        "courseName": "Physics",
+        "grade": "B"
+      }
+    ],
+    "address": {
+      "street": "123 Main St",
+      "city": "Springfield",
+      "state": "IL",
+      "postalCode": "62701"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "age": 25,
+    "isStudent": true,
+    "contactInfo": {
+      "email": "jane.smith@example.com",
+      "phone": "+0987654321"
+    },
+    "courses": [
+      {
+        "courseId": 103,
+        "courseName": "Biology",
+        "grade": "A+"
+      },
+      {
+        "courseId": 104,
+        "courseName": "Chemistry",
+        "grade": "A"
+      }
+    ],
+    "address": {
+      "street": "456 Elm St",
+      "city": "Shelbyville",
+      "state": "IL",
+      "postalCode": "62565"
+    }
+  }
+]

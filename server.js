@@ -340,6 +340,78 @@ const uploadStorage = multer({
   fileFilter: fileFilter,
 });
 
+// Function to flatten nested JSON
+const flattenObject = (obj, prefix = "") => {
+  let flat = {};
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if (
+        typeof obj[key] === "object" &&
+        !Array.isArray(obj[key]) &&
+        obj[key] !== null
+      ) {
+        let nestedObject = flattenObject(obj[key], prefix + key + ".");
+        for (let nestedKey in nestedObject) {
+          if (nestedObject.hasOwnProperty(nestedKey)) {
+            flat[nestedKey] = nestedObject[nestedKey];
+          }
+        }
+      } else if (Array.isArray(obj[key])) {
+        obj[key].forEach((item, index) => {
+          if (typeof item === "object") {
+            let nestedArrayObject = flattenObject(
+              item,
+              prefix + key + "[" + index + "]."
+            );
+            for (let nestedArrayKey in nestedArrayObject) {
+              if (nestedArrayObject.hasOwnProperty(nestedArrayKey)) {
+                flat[nestedArrayKey] = nestedArrayObject[nestedArrayKey];
+              }
+            }
+          } else {
+            flat[prefix + key + "[" + index + "]"] = item;
+          }
+        });
+      } else {
+        flat[prefix + key] = obj[key];
+      }
+    }
+  }
+  return flat;
+};
+
+// Function to dynamically create CSV stringifier
+const createDynamicCsvStringifier = (data) => {
+  const flattenedData = data.map((item) => flattenObject(item));
+  const headers = Array.from(
+    new Set(flattenedData.flatMap((item) => Object.keys(item)))
+  ).map((key) => ({ id: key, title: key }));
+
+  return createObjectCsvStringifier({
+    header: headers,
+  });
+};
+
+// Function to find the first array with two or more items in an object
+const findFirstArray = (obj) => {
+  let result = null;
+  const findArray = (object) => {
+    for (let key in object) {
+      if (object.hasOwnProperty(key)) {
+        if (Array.isArray(object[key]) && object[key].length >= 2) {
+          result = object[key];
+          return;
+        } else if (typeof object[key] === "object") {
+          findArray(object[key]);
+          if (result) return;
+        }
+      }
+    }
+  };
+  findArray(obj);
+  return result;
+};
+
 // Single file
 app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
   if (req.file) {
@@ -352,82 +424,19 @@ app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
         const jsonData = JSON.parse(data);
         console.log(jsonData);
 
-        // Function to find the first array with two or more items
-        const findFirstArray = (obj) => {
-          let result = null;
-          const findArray = (object) => {
-            for (let key in object) {
-              if (object.hasOwnProperty(key)) {
-                if (Array.isArray(object[key]) && object[key].length >= 1) {
-                  result = object[key];
-                  return;
-                } else if (typeof object[key] === "object") {
-                  findArray(object[key]);
-                  if (result) return;
-                }
-              }
-            }
-          };
-          findArray(obj);
-          return result;
-        };
+        let arrayToConvert;
+        if (Array.isArray(jsonData)) {
+          arrayToConvert = jsonData;
+        } else {
+          arrayToConvert = findFirstArray(jsonData);
+        }
 
-        const firstArray = findFirstArray(jsonData);
-        if (!firstArray) {
+        if (!arrayToConvert) {
           return res.status(400).send("No array with two or more items found.");
         }
 
-        // Function to flatten nested JSON
-        const flattenObject = (obj, prefix = "") => {
-          let flat = {};
-          for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-              if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
-                let nestedObject = flattenObject(obj[key], prefix + key + ".");
-                for (let nestedKey in nestedObject) {
-                  if (nestedObject.hasOwnProperty(nestedKey)) {
-                    flat[nestedKey] = nestedObject[nestedKey];
-                  }
-                }
-              } else if (Array.isArray(obj[key])) {
-                obj[key].forEach((item, index) => {
-                  if (typeof item === "object") {
-                    let nestedArrayObject = flattenObject(
-                      item,
-                      prefix + key + "[" + index + "]."
-                    );
-                    for (let nestedArrayKey in nestedArrayObject) {
-                      if (nestedArrayObject.hasOwnProperty(nestedArrayKey)) {
-                        flat[nestedArrayKey] =
-                          nestedArrayObject[nestedArrayKey];
-                      }
-                    }
-                  } else {
-                    flat[prefix + key + "[" + index + "]"] = item;
-                  }
-                });
-              } else {
-                flat[prefix + key] = obj[key];
-              }
-            }
-          }
-          return flat;
-        };
-
-        // Function to dynamically create CSV stringifier
-        const createDynamicCsvStringifier = (data) => {
-          const flattenedData = data.map((item) => flattenObject(item));
-          const headers = Array.from(
-            new Set(flattenedData.flatMap((item) => Object.keys(item)))
-          ).map((key) => ({ id: key, title: key }));
-
-          return createObjectCsvStringifier({
-            header: headers,
-          });
-        };
-
         // Flatten and prepare data for CSV writing
-        const flatData = firstArray.map((item) => flattenObject(item));
+        const flatData = arrayToConvert.map((item) => flattenObject(item));
 
         // Create CSV stringifier
         const csvStringifier = createDynamicCsvStringifier(flatData);
