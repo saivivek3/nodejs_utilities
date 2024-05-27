@@ -1,142 +1,142 @@
-const express = require("express");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-const { createObjectCsvStringifier } = require("csv-writer");
-const cors = require("cors");
-const app = express();
+// const express = require("express");
+// const multer = require("multer");
+// const path = require("path");
+// const fs = require("fs");
+// const { createObjectCsvStringifier } = require("csv-writer");
+// const cors = require("cors");
+// const app = express();
 
-// Use CORS middleware
-app.use(cors());
+// // Use CORS middleware
+// app.use(cors());
 
-// Ensure the uploads directory exists
-const uploadDir = "uploads/";
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
+// // Ensure the uploads directory exists
+// const uploadDir = "uploads/";
+// if (!fs.existsSync(uploadDir)) {
+//   fs.mkdirSync(uploadDir);
+// }
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, uploadDir);
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + "-" + file.originalname);
+//   },
+// });
 
-// File filter to only accept JSON files
-const fileFilter = (req, file, cb) => {
-  const filetypes = /json/;
-  const mimetype = filetypes.test(file.mimetype);
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+// // File filter to only accept JSON files
+// const fileFilter = (req, file, cb) => {
+//   const filetypes = /json/;
+//   const mimetype = filetypes.test(file.mimetype);
+//   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
 
-  if (mimetype && extname) {
-    return cb(null, true);
-  } else {
-    cb(new Error("Only JSON files are allowed!"));
-  }
-};
+//   if (mimetype && extname) {
+//     return cb(null, true);
+//   } else {
+//     cb(new Error("Only JSON files are allowed!"));
+//   }
+// };
 
-const uploadStorage = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-});
+// const uploadStorage = multer({
+//   storage: storage,
+//   fileFilter: fileFilter,
+// });
 
-// Single file
-app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
-  if (req.file) {
-    // Read the uploaded JSON file
-    fs.readFile(req.file.path, "utf8", (err, data) => {
-      if (err) {
-        return res.status(500).send("Error reading the JSON file");
-      }
-      try {
-        const jsonData = JSON.parse(data);
-        console.log(jsonData);
+// // Single file
+// app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
+//   if (req.file) {
+//     // Read the uploaded JSON file
+//     fs.readFile(req.file.path, "utf8", (err, data) => {
+//       if (err) {
+//         return res.status(500).send("Error reading the JSON file");
+//       }
+//       try {
+//         const jsonData = JSON.parse(data);
+//         console.log(jsonData);
 
-        // Function to flatten nested JSON
-        const flattenObject = (obj, prefix = "") => {
-          let flat = {};
-          for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-              if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
-                let nestedObject = flattenObject(obj[key], prefix + key + ".");
-                for (let nestedKey in nestedObject) {
-                  if (nestedObject.hasOwnProperty(nestedKey)) {
-                    flat[nestedKey] = nestedObject[nestedKey];
-                  }
-                }
-              } else if (Array.isArray(obj[key])) {
-                obj[key].forEach((item, index) => {
-                  if (typeof item === "object") {
-                    let nestedArrayObject = flattenObject(
-                      item,
-                      prefix + key + "[" + index + "]."
-                    );
-                    for (let nestedArrayKey in nestedArrayObject) {
-                      if (nestedArrayObject.hasOwnProperty(nestedArrayKey)) {
-                        flat[nestedArrayKey] =
-                          nestedArrayObject[nestedArrayKey];
-                      }
-                    }
-                  } else {
-                    flat[prefix + key + "[" + index + "]"] = item;
-                  }
-                });
-              } else {
-                flat[prefix + key] = obj[key];
-              }
-            }
-          }
-          return flat;
-        };
+//         // Function to flatten nested JSON
+//         const flattenObject = (obj, prefix = "") => {
+//           let flat = {};
+//           for (let key in obj) {
+//             if (obj.hasOwnProperty(key)) {
+//               if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
+//                 let nestedObject = flattenObject(obj[key], prefix + key + ".");
+//                 for (let nestedKey in nestedObject) {
+//                   if (nestedObject.hasOwnProperty(nestedKey)) {
+//                     flat[nestedKey] = nestedObject[nestedKey];
+//                   }
+//                 }
+//               } else if (Array.isArray(obj[key])) {
+//                 obj[key].forEach((item, index) => {
+//                   if (typeof item === "object") {
+//                     let nestedArrayObject = flattenObject(
+//                       item,
+//                       prefix + key + "[" + index + "]."
+//                     );
+//                     for (let nestedArrayKey in nestedArrayObject) {
+//                       if (nestedArrayObject.hasOwnProperty(nestedArrayKey)) {
+//                         flat[nestedArrayKey] =
+//                           nestedArrayObject[nestedArrayKey];
+//                       }
+//                     }
+//                   } else {
+//                     flat[prefix + key + "[" + index + "]"] = item;
+//                   }
+//                 });
+//               } else {
+//                 flat[prefix + key] = obj[key];
+//               }
+//             }
+//           }
+//           return flat;
+//         };
 
-        // Function to dynamically create CSV stringifier
-        const createDynamicCsvStringifier = (data) => {
-          const flattenedData = data.map((item) => flattenObject(item));
-          const headers = Array.from(
-            new Set(flattenedData.flatMap((item) => Object.keys(item)))
-          ).map((key) => ({ id: key, title: key }));
+//         // Function to dynamically create CSV stringifier
+//         const createDynamicCsvStringifier = (data) => {
+//           const flattenedData = data.map((item) => flattenObject(item));
+//           const headers = Array.from(
+//             new Set(flattenedData.flatMap((item) => Object.keys(item)))
+//           ).map((key) => ({ id: key, title: key }));
 
-          return createObjectCsvStringifier({
-            header: headers,
-          });
-        };
+//           return createObjectCsvStringifier({
+//             header: headers,
+//           });
+//         };
 
-        // Flatten and prepare data for CSV writing
-        const flatData = jsonData.map((item) => flattenObject(item));
+//         // Flatten and prepare data for CSV writing
+//         const flatData = jsonData.map((item) => flattenObject(item));
 
-        // Create CSV stringifier
-        const csvStringifier = createDynamicCsvStringifier(flatData);
-        const header = csvStringifier.getHeaderString();
-        const records = csvStringifier.stringifyRecords(flatData);
+//         // Create CSV stringifier
+//         const csvStringifier = createDynamicCsvStringifier(flatData);
+//         const header = csvStringifier.getHeaderString();
+//         const records = csvStringifier.stringifyRecords(flatData);
 
-        // Set the response headers for file download
-        res.setHeader("Content-disposition", "attachment; filename=test.csv");
-        res.set("Content-Type", "text/csv");
+//         // Set the response headers for file download
+//         res.setHeader("Content-disposition", "attachment; filename=test.csv");
+//         res.set("Content-Type", "text/csv");
 
-        // Send the CSV content as the response
-        res.send(header + records);
-      } catch (err) {
-        return res.status(400).send("Error parsing the JSON file");
-      }
-    });
-  } else {
-    return res.status(400).send("Error: Only JSON files are allowed!");
-  }
-});
+//         // Send the CSV content as the response
+//         res.send(header + records);
+//       } catch (err) {
+//         return res.status(400).send("Error parsing the JSON file");
+//       }
+//     });
+//   } else {
+//     return res.status(400).send("Error: Only JSON files are allowed!");
+//   }
+// });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  if (err) {
-    return res.status(400).send(err.message);
-  }
-  next();
-});
+// // Error handling middleware
+// app.use((err, req, res, next) => {
+//   if (err) {
+//     return res.status(400).send(err.message);
+//   }
+//   next();
+// });
 
-app.listen(3000 || process.env.PORT, () => {
-  console.log("Server on...");
-});
+// app.listen(3000 || process.env.PORT, () => {
+//   console.log("Server on...");
+// });
 
 //
 // const express = require("express");
@@ -623,3 +623,63 @@ app.listen(3000 || process.env.PORT, () => {
 // app.listen(3000 || process.env.PORT, () => {
 //   console.log("Server on...");
 // });
+import express from "express";
+import multer from "multer";
+import { readFile, unlink } from "fs";
+import { Parser } from "json2csv";
+import { flatten } from "flat";
+
+// Initialize Express
+const app = express();
+const port = 3000;
+
+// Set up Multer for file uploads
+const upload = multer({ dest: "uploads/" });
+
+// Route to handle file upload and conversion
+app.post("/upload", upload.single("file"), (req, res) => {
+  // Ensure a file was uploaded
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+  }
+
+  // Read the uploaded JSON file
+  readFile(req.file.path, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).send("Error reading the file.");
+    }
+
+    try {
+      // Parse JSON data
+      const jsonData = JSON.parse(data);
+
+      // Flatten JSON data
+      const flattenedData = flatten(jsonData);
+
+      // Convert flattened data to CSV
+      const json2csvParser = new Parser();
+      const csv = json2csvParser.parse(flattenedData);
+
+      // Send CSV as a response
+      res.header("Content-Type", "text/csv");
+      res.attachment("data.csv");
+      res.send(csv);
+    } catch (err) {
+      res.status(500).send("Error processing the file.");
+    } finally {
+      // Clean up uploaded file
+      unlink(req.file.path, (err) => {
+        if (err) console.error("Error deleting the file:", err);
+      });
+    }
+  });
+});
+
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
