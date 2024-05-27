@@ -422,7 +422,6 @@ app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
       }
       try {
         const jsonData = JSON.parse(data);
-        console.log(jsonData);
 
         let arrayToConvert;
         if (Array.isArray(jsonData)) {
