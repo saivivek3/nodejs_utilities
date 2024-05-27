@@ -628,7 +628,7 @@ import multer from "multer";
 import { readFile, unlink } from "fs";
 import { Parser } from "json2csv";
 import { flatten } from "flat";
-const cors = require("cors");
+import cors from "cors";
 
 // Initialize Express
 const app = express();
