@@ -138,6 +138,7 @@
 //   console.log("Server on...");
 // });
 
+//
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
@@ -182,6 +183,58 @@ const uploadStorage = multer({
   fileFilter: fileFilter,
 });
 
+// Function to flatten nested JSON
+const flattenObject = (obj, prefix = "") => {
+  let flat = {};
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if (
+        typeof obj[key] === "object" &&
+        !Array.isArray(obj[key]) &&
+        obj[key] !== null
+      ) {
+        let nestedObject = flattenObject(obj[key], prefix + key + ".");
+        for (let nestedKey in nestedObject) {
+          if (nestedObject.hasOwnProperty(nestedKey)) {
+            flat[nestedKey] = nestedObject[nestedKey];
+          }
+        }
+      } else if (Array.isArray(obj[key])) {
+        obj[key].forEach((item, index) => {
+          if (typeof item === "object") {
+            let nestedArrayObject = flattenObject(
+              item,
+              prefix + key + "[" + index + "]."
+            );
+            for (let nestedArrayKey in nestedArrayObject) {
+              if (nestedArrayObject.hasOwnProperty(nestedArrayKey)) {
+                flat[nestedArrayKey] = nestedArrayObject[nestedArrayKey];
+              }
+            }
+          } else {
+            flat[prefix + key + "[" + index + "]"] = item;
+          }
+        });
+      } else {
+        flat[prefix + key] = obj[key];
+      }
+    }
+  }
+  return flat;
+};
+
+// Function to dynamically create CSV stringifier
+const createDynamicCsvStringifier = (data) => {
+  const flattenedData = data.map((item) => flattenObject(item));
+  const headers = Array.from(
+    new Set(flattenedData.flatMap((item) => Object.keys(item)))
+  ).map((key) => ({ id: key, title: key }));
+
+  return createObjectCsvStringifier({
+    header: headers,
+  });
+};
+
 // Single file
 app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
   if (req.file) {
@@ -194,42 +247,22 @@ app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
         const jsonData = JSON.parse(data);
         console.log(jsonData);
 
-        // Function to flatten nested JSON
-        const flattenObject = (obj, prefix = "") => {
-          let flat = {};
-          for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-              if (typeof obj[key] === "object" && obj[key] !== null) {
-                let nestedObject = flattenObject(obj[key], prefix + key + ".");
-                for (let nestedKey in nestedObject) {
-                  if (nestedObject.hasOwnProperty(nestedKey)) {
-                    flat[nestedKey] = nestedObject[nestedKey];
-                  }
-                }
-              } else {
-                flat[prefix + key] = obj[key];
-              }
-            }
-          }
-          return flat;
-        };
+        // Filter arrays with 2 or more items
+        const arraysToConvert = Object.keys(jsonData)
+          .filter((key) => Array.isArray(jsonData[key]))
+          .map((key) => jsonData[key]);
 
-        // Function to dynamically create CSV stringifier
-        const createDynamicCsvStringifier = (data) => {
-          const flattenedData = data.map((item) => flattenObject(item));
-          const headers = Array.from(
-            new Set(flattenedData.flatMap((item) => Object.keys(item)))
-          ).map((key) => ({ id: key, title: key }));
+        // Flatten and prepare data for CSV writing
+        let flatData = [];
+        arraysToConvert.forEach((array) => {
+          flatData = flatData.concat(array.map((item) => flattenObject(item)));
+        });
 
-          return createObjectCsvStringifier({
-            header: headers,
-          });
-        };
-
-        // Prepare data for CSV writing
-        const flatData = Array.isArray(jsonData)
-          ? jsonData.map((item) => flattenObject(item))
-          : [flattenObject(jsonData)];
+        if (flatData.length === 0) {
+          return res
+            .status(400)
+            .send("No arrays with 2 or more items found in the JSON file");
+        }
 
         // Create CSV stringifier
         const csvStringifier = createDynamicCsvStringifier(flatData);

@@ -1,0 +1,244 @@
+{
+  "company": {
+    "name": "Global Tech Solutions",
+    "location": {
+      "address": {
+        "street": "4567 Market Street",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10001",
+        "country": "USA"
+      },
+      "coordinates": {
+        "latitude": 40.7128,
+        "longitude": -74.0060
+      }
+    },
+    "departments": [
+      {
+        "name": "Engineering",
+        "teams": [
+          {
+            "name": "Backend",
+            "employees": [
+              {
+                "id": 1,
+                "name": "John Doe",
+                "position": "Senior Engineer",
+                "skills": ["Java", "Spring", "Microservices"],
+                "contact": {
+                  "email": "john.doe@globaltech.com",
+                  "phone": "555-0001",
+                  "address": {
+                    "street": "789 Engineer Road",
+                    "city": "San Francisco",
+                    "state": "CA",
+                    "zipCode": "94107",
+                    "country": "USA"
+                  }
+                },
+                "active": true,
+                "projects": [
+                  {
+                    "name": "Project Alpha",
+                    "role": "Lead Developer",
+                    "status": "Ongoing",
+                    "budget": 1000000
+                  },
+                  {
+                    "name": "Project Beta",
+                    "role": "Consultant",
+                    "status": "Completed",
+                    "budget": 500000
+                  }
+                ]
+              },
+              {
+                "id": 2,
+                "name": "Jane Smith",
+                "position": "Software Engineer",
+                "skills": ["Python", "Django", "REST APIs"],
+                "contact": {
+                  "email": "jane.smith@globaltech.com",
+                  "phone": "555-0002",
+                  "address": {
+                    "street": "101 Developer Ave",
+                    "city": "Los Angeles",
+                    "state": "CA",
+                    "zipCode": "90001",
+                    "country": "USA"
+                  }
+                },
+                "active": false,
+                "projects": [
+                  {
+                    "name": "Project Gamma",
+                    "role": "Developer",
+                    "status": "Ongoing",
+                    "budget": 750000
+                  }
+                ]
+              }
+            ],
+            "budget": 3000000
+          },
+          {
+            "name": "Frontend",
+            "employees": [
+              {
+                "id": 3,
+                "name": "Alice Johnson",
+                "position": "Frontend Engineer",
+                "skills": ["React", "JavaScript", "CSS"],
+                "contact": {
+                  "email": "alice.johnson@globaltech.com",
+                  "phone": "555-0003",
+                  "address": {
+                    "street": "202 UI Lane",
+                    "city": "Austin",
+                    "state": "TX",
+                    "zipCode": "73301",
+                    "country": "USA"
+                  }
+                },
+                "active": true,
+                "projects": [
+                  {
+                    "name": "Project Delta",
+                    "role": "UI/UX Designer",
+                    "status": "Ongoing",
+                    "budget": 600000
+                  }
+                ]
+              }
+            ],
+            "budget": 1500000
+          }
+        ]
+      },
+      {
+        "name": "Human Resources",
+        "employees": [
+          {
+            "id": 4,
+            "name": "Bob Brown",
+            "position": "HR Manager",
+            "skills": ["Recruitment", "Employee Relations", "Compliance"],
+            "contact": {
+              "email": "bob.brown@globaltech.com",
+              "phone": "555-0004",
+              "address": {
+                "street": "303 HR Blvd",
+                "city": "Chicago",
+                "state": "IL",
+                "zipCode": "60601",
+                "country": "USA"
+              }
+            },
+            "active": true,
+            "projects": [
+              {
+                "name": "Project Epsilon",
+                "role": "Coordinator",
+                "status": "Planning",
+                "budget": 200000
+              }
+            ]
+          }
+        ],
+        "budget": 500000
+      }
+    ],
+    "founded": 2005,
+    "publiclyTraded": true,
+    "stockSymbol": "GTS",
+    "financials": {
+      "revenue": 120000000,
+      "expenses": 85000000,
+      "profit": 35000000,
+      "assets": {
+        "currentAssets": 45000000,
+        "nonCurrentAssets": 80000000,
+        "totalAssets": 125000000
+      },
+      "liabilities": {
+        "currentLiabilities": 30000000,
+        "nonCurrentLiabilities": 20000000,
+        "totalLiabilities": 50000000
+      },
+      "equity": 75000000
+    }
+  },
+  "products": [
+    {
+      "id": "P2001",
+      "name": "TechMaster Pro",
+      "category": "Electronics",
+      "price": 499.99,
+      "inStock": true,
+      "features": {
+        "color": "Silver",
+        "warranty": "2 years",
+        "specifications": {
+          "weight": "1.5kg",
+          "dimensions": {
+            "width": "30cm",
+            "height": "20cm",
+            "depth": "2cm"
+          },
+          "batteryLife": "10 hours"
+        }
+      },
+      "ratings": [5, 4, 5, 4, 5]
+    },
+    {
+      "id": "P2002",
+      "name": "GadgetGuru",
+      "category": "Software",
+      "price": 299.99,
+      "inStock": false,
+      "features": {
+        "version": "3.5",
+        "platforms": ["Windows", "Mac"],
+        "license": "Annual"
+      },
+      "ratings": [4, 3, 5, 4]
+    }
+  ],
+  "recentTransactions": [
+    {
+      "transactionId": "T6001",
+      "date": "2024-05-25",
+      "amount": 799.98,
+      "customer": {
+        "name": "Charlie Davis",
+        "email": "charlie.davis@example.com",
+        "address": {
+          "street": "400 Customer St",
+          "city": "Seattle",
+          "state": "WA",
+          "zipCode": "98101",
+          "country": "USA"
+        }
+      },
+      "productsPurchased": ["P2001", "P2002"]
+    },
+    {
+      "transactionId": "T6002",
+      "date": "2024-05-26",
+      "amount": 499.99,
+      "customer": {
+        "name": "Dana Evans",
+        "email": "dana.evans@example.com",
+        "address": {
+          "street": "500 Buyer Blvd",
+          "city": "Denver",
+          "state": "CO",
+          "zipCode": "80201",
+          "country": "USA"
+        }
+      },
+      "productsPurchased": ["P2001"]
+    }
+  ]
+}
