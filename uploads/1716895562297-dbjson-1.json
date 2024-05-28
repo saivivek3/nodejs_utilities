@@ -1,0 +1,166 @@
+{
+    "id": "6a4fe2ac-0f89-483b-b401-501156205161",
+    "imp": [
+        {
+            "id": "fbe0ba0b-36ef-4709-b30b-3ea382fb9280",
+            "banner": {
+                "format": [
+                    {
+                        "w": 300,
+                        "h": 250
+                    }
+                ],
+                "api": [
+                    3,
+                    5,
+                    6,
+                    7
+                ]
+            },
+            "video": {
+                "mimes": [
+                    "video/mp4"
+                ],
+                "maxduration": 120,
+                "protocols": [
+                    2
+                ],
+                "placement": 4,
+                "playbackmethod": [
+                    6
+                ],
+                "delivery": [
+                    3
+                ],
+                "api": [
+                    1,
+                    2
+                ]
+            },
+            "instl": 1,
+            "tagid": "430480",
+            "clickbrowser": 0,
+            "secure": 1
+        }
+    ],
+    "app": {
+        "name": "SmartNews",
+        "bundle": "jp.gocro.smartnews.android",
+        "ver": "24.5.10",
+        "publisher": {
+            "id": "22312"
+        },
+        "ext": {
+            "prebid": {
+                "source": "prebid-mobile",
+                "version": "2.2.0"
+            }
+        }
+    },
+    "device": {
+        "geo": {
+            "country": "USA",
+            "region": "FL"
+        },
+        "lmt": 0,
+        "ua": "Mozilla/5.0 (Linux; Android 14; SM-A156U Build/UP1A.231005.007; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/124.0.6367.172 Mobile Safari/537.36",
+        "ip": "98.56.18.138",
+        "devicetype": 4,
+        "make": "samsung",
+        "model": "SM-A156U",
+        "os": "Android",
+        "osv": "14",
+        "h": 2340,
+        "w": 1080,
+        "pxratio": 2.8125,
+        "language": "en",
+        "carrier": "cricket",
+        "mccmnc": "310-410",
+        "connectiontype": 2,
+        "ifa": "d047cc5e-1177-46dc-b48b-2de3762f977f"
+    },
+    "user": [],
+    "at": 1,
+    "tmax": 696,
+    "cur": [
+        "USD"
+    ],
+    "source": {
+        "tid": "124281c3-e37b-4a9d-b621-6672189c3024",
+        "ext": {
+            "omidpv": "22.6.0",
+            "omidpn": "Google"
+        }
+    },
+    "regs": {
+        "ext": {
+            "us_privacy": "1YNN"
+        }
+    },
+    "ext": {
+        "prebid": {
+            "bidadjustmentfactors": [],
+            "targeting": {
+                "pricegranularity": {
+                    "precision": 2,
+                    "ranges": [
+                        {
+                            "max": 20,
+                            "increment": 0.1
+                        }
+                    ]
+                },
+                "mediatypepricegranularity": {
+                    "banner": {
+                        "ranges": [
+                            {
+                                "max": 3,
+                                "min": 0,
+                                "increment": 0.01
+                            },
+                            {
+                                "max": 8,
+                                "min": 3,
+                                "increment": 0.05
+                            },
+                            {
+                                "max": 20,
+                                "min": 8,
+                                "increment": 0.5
+                            },
+                            {
+                                "max": 35,
+                                "min": 20,
+                                "increment": 1
+                            }
+                        ],
+                        "precision": 2
+                    }
+                },
+                "includewinners": true,
+                "includebidderkeys": false,
+                "includeformat": true
+            },
+            "storedrequest": {
+                "id": "22312-smartnews-android"
+            },
+            "cache": {
+                "bids": [],
+                "vastxml": []
+            },
+            "integration": "dmpbs",
+            "channel": {
+                "name": "app"
+            },
+            "server": {
+                "externalurl": "https://prebid-server.rubiconproject.com",
+                "gvlid": 52,
+                "datacenter": "us-east",
+                "endpoint": "/openrtb2/auction"
+            },
+            "floors": {
+                "enabled": false
+            }
+        }
+    }
+}

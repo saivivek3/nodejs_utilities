@@ -398,7 +398,7 @@ const findFirstArray = (obj) => {
   const findArray = (object) => {
     for (let key in object) {
       if (object.hasOwnProperty(key)) {
-        if (Array.isArray(object[key]) && object[key].length >= 2) {
+        if (Array.isArray(object[key])) {
           result = object[key];
           return;
         } else if (typeof object[key] === "object") {
@@ -427,6 +427,7 @@ app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
         if (Array.isArray(jsonData)) {
           arrayToConvert = jsonData;
         } else {
+          console.log("else was called");
           arrayToConvert = findFirstArray(jsonData);
         }
 
@@ -434,8 +435,11 @@ app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
           return res.status(400).send("No array with two or more items found.");
         }
 
+        // console.log({ arrayToConvert });
         // Flatten and prepare data for CSV writing
         const flatData = arrayToConvert.map((item) => flattenObject(item));
+
+        console.log({ flatData });
 
         // Create CSV stringifier
         const csvStringifier = createDynamicCsvStringifier(flatData);
