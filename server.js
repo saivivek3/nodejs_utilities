@@ -340,7 +340,7 @@ const uploadStorage = multer({
   fileFilter: fileFilter,
 });
 
-// Function to flatten nested JSON
+// Function to flatten nested JSON with specific key format
 const flattenObject = (obj, prefix = "") => {
   let flat = {};
   for (let key in obj) {
@@ -350,7 +350,7 @@ const flattenObject = (obj, prefix = "") => {
         !Array.isArray(obj[key]) &&
         obj[key] !== null
       ) {
-        let nestedObject = flattenObject(obj[key], prefix + key + ".");
+        let nestedObject = flattenObject(obj[key], prefix + key + "/");
         for (let nestedKey in nestedObject) {
           if (nestedObject.hasOwnProperty(nestedKey)) {
             flat[nestedKey] = nestedObject[nestedKey];
@@ -361,7 +361,7 @@ const flattenObject = (obj, prefix = "") => {
           if (typeof item === "object") {
             let nestedArrayObject = flattenObject(
               item,
-              prefix + key + "[" + index + "]."
+              prefix + key + "/" + index + "/"
             );
             for (let nestedArrayKey in nestedArrayObject) {
               if (nestedArrayObject.hasOwnProperty(nestedArrayKey)) {
@@ -369,7 +369,7 @@ const flattenObject = (obj, prefix = "") => {
               }
             }
           } else {
-            flat[prefix + key + "[" + index + "]"] = item;
+            flat[prefix + key + "/" + index] = item;
           }
         });
       } else {
@@ -392,7 +392,7 @@ const createDynamicCsvStringifier = (data) => {
   });
 };
 
-// Function to find the first array with two or more items in an object
+// Function to find the first array in an object
 const findFirstArray = (obj) => {
   let result = null;
   const findArray = (object) => {
@@ -427,7 +427,6 @@ app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
         if (Array.isArray(jsonData)) {
           arrayToConvert = jsonData;
         } else {
-          console.log("else was called");
           arrayToConvert = findFirstArray(jsonData);
         }
 
@@ -435,11 +434,8 @@ app.post("/upload/single", uploadStorage.single("file"), (req, res) => {
           return res.status(400).send("No array with two or more items found.");
         }
 
-        // console.log({ arrayToConvert });
         // Flatten and prepare data for CSV writing
         const flatData = arrayToConvert.map((item) => flattenObject(item));
-
-        console.log({ flatData });
 
         // Create CSV stringifier
         const csvStringifier = createDynamicCsvStringifier(flatData);
